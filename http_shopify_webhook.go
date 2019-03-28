@@ -10,24 +10,20 @@ import (
 	"net/http"
 )
 
-// Type aliases for clarity.
-type Handler http.Handler
-type Middleware func(h Handler) Handler
-
 // Public webhook verify function wrapper.
 // Can be used with any framework tapping into net/http.
 // Simply pass in the secret key for the Shopify app.
 // Example: `WebhookVerify("abc123")(anotherHandler)`.
-func WebhookVerify(key string) Middleware {
-	return func(h Handler) Handler {
-		return webhookVerifyHandler(key, h)
+func WebhookVerify(key string) func(h http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WebhookVerifyHandler(key, h)
 	}
 }
 
 // Webhook verify handler function.
 // Returns a usable handler.
 // Pass in the secret key for the Shopify app and the next handler.`
-func webhookVerifyHandler(key string, h Handler) Handler {
+func WebhookVerifyHandler(key string, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// HMAC from request headers and the shop.
 		shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
