@@ -18,7 +18,7 @@ func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Verify and if all is well, run the next handler.
 		ok := WebhookVerifyRequest(key, w, r)
-		if ok {
+		if ok == true {
 			fn(w, r)
 		}
 	}

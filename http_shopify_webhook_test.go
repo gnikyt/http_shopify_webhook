@@ -48,10 +48,14 @@ func TestNetHttpSuccess(t *testing.T) {
 	shop := "example.myshopify.com"
 
 	// Setup the server with our data.
-	rec := setupServer(key, shop, hmac, body)
+	rec, ran := setupServer(key, shop, hmac, body)
 
 	if c := rec.Code; c != http.StatusOK {
 		t.Errorf("expected status code %v got %v", http.StatusOK, c)
+	}
+
+	if !ran {
+		t.Errorf("expected next handler to run but did not")
 	}
 }
 
@@ -64,15 +68,19 @@ func TestNetHttpFailure(t *testing.T) {
 	shop := "example.myshopify.com"
 
 	// Setup the server with our data.
-	rec := setupServer(key, shop, hmac, body)
+	rec, ran := setupServer(key, shop, hmac, body)
 
 	if c := rec.Code; c != http.StatusBadRequest {
 		t.Errorf("expected status code %v got %v", http.StatusBadRequest, c)
 	}
+
+	if ran == true {
+		t.Errorf("expected next handler to not run but it did")
+	}
 }
 
 // Sets up the server for a few tests.
-func setupServer(key string, shop string, hmac string, body string) *httptest.ResponseRecorder {
+func setupServer(key string, shop string, hmac string, body string) (*httptest.ResponseRecorder, bool) {
 	// Create a mock request to use
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "http://testing", bytes.NewBufferString(body))
@@ -82,13 +90,15 @@ func setupServer(key string, shop string, hmac string, body string) *httptest.Re
 	req.Header.Set("X-Shopify-Hmac-Sha256", hmac)
 
 	// Our "next" handler.
+	ran := false
 	nh := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Ok")
+		ran = true
 	})
 
 	// Create the handler and serve with our recorder and request.
 	h := WebhookVerify(key, nh)
 	h.ServeHTTP(rec, req)
 
-	return rec
+	return rec, ran
 }
