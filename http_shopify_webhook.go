@@ -16,15 +16,18 @@ import (
 // Example: `WebhookVerify("abc123", anotherHandler)`.
 func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		WebhookVerifyRequest(key, w, r)
-		fn(w, r)
+		// Verify and if all is well, run the next handler.
+		ok := WebhookVerifyRequest(key, w, r)
+		if !ok {
+			fn(w, r)
+		}
 	}
 }
 
 // Webhook verify request from HTTP.
 // Returns a usable handler.
 // Pass in the secret key for the Shopify app and the next handler.`
-func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) {
+func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) (ok bool) {
 	// HMAC from request headers and the shop.
 	shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
 	shop := r.Header.Get("X-Shopify-Shop-Domain")
@@ -35,9 +38,13 @@ func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) {
 	bb, _ := ioutil.ReadAll(tr)
 
 	// Verify all is ok.
-	if ok := verifyRequest(key, shop, shmac, bb); !ok {
+	ok = verifyRequest(key, shop, shmac, bb)
+	if !ok {
 		http.Error(w, "Invalid webhook signature", http.StatusBadRequest)
+		return
 	}
+
+	return
 }
 
 // Do the actual work.
