@@ -12,7 +12,7 @@ import (
 func TestVerifyRequest(t *testing.T) {
 	// Setup a simple body with a matching HMAC.
 	body := []byte("{\"key\":\"value\"}")
-	hmac := "ee2012a00f1649bc35f4cfe1fa582b2ebda5cbf2ef82713d6dc2ec93d81f96fb"
+	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
 	shop := "example.myshopify.com"
 
 	if ok := verifyRequest("secret", shop, hmac, body); !ok {
@@ -32,7 +32,7 @@ func TestVerifyRequestError(t *testing.T) {
 
 	// Now add the shop, but make the HMAC not match.
 	shop = "example.myshopify.com"
-	hmac = "ee2012a00f1649bc35f4"
+	hmac = "7iASoA8WSbw19M/h+"
 
 	if ok := verifyRequest("secret", shop, hmac, body); ok {
 		t.Errorf("expected request data to not verify, but it did")
@@ -44,7 +44,7 @@ func TestNetHttpSuccess(t *testing.T) {
 	// Set our data.
 	key := "secret"
 	body := "{\"key\":\"value\"}"
-	hmac := "ee2012a00f1649bc35f4cfe1fa582b2ebda5cbf2ef82713d6dc2ec93d81f96fb"
+	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
 	shop := "example.myshopify.com"
 
 	// Setup the server with our data.

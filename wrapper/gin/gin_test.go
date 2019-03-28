@@ -14,7 +14,7 @@ func TestGinWrapperSuccess(t *testing.T) {
 	// Set our data.
 	key := "secret"
 	body := "{\"key\":\"value\"}"
-	hmac := "ee2012a00f1649bc35f4cfe1fa582b2ebda5cbf2ef82713d6dc2ec93d81f96fb"
+	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
 	shop := "example.myshopify.com"
 
 	// Setup the server with our data.
@@ -34,7 +34,7 @@ func TestGinWrapperFailure(t *testing.T) {
 	// Set our data.
 	key := "secret"
 	body := "{\"key\":\"value\"}"
-	hmac := "ee2012a00f1649bc35f"
+	hmac := "7iASoA8WSbw19M/h+"
 	shop := "example.myshopify.com"
 
 	// Setup the server with our data.

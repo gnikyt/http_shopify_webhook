@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -59,7 +59,7 @@ func verifyRequest(key string, shop string, shmac string, bb []byte) bool {
 	// Create an hmac of the body with the secret key to compare.
 	h := hmac.New(sha256.New, []byte(key))
 	h.Write(bb)
-	sum := hex.EncodeToString(h.Sum(nil))
+	enc := base64.StdEncoding.EncodeToString(h.Sum(nil))
 
-	return sum == shmac
+	return enc == shmac
 }

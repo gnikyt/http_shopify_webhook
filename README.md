@@ -9,7 +9,9 @@ It can be used with any framework which speaks to `http.http.ResponseWriter`, `h
 
 ## Usage
 
-This package provides ability to grab the shop's domain, the request HMAC, and POST body of a webhook request. Then, it will reproduce the HMAC locally with the POST body and the app's secret key to see if the data matches. For more information [see Shopify's article](https://help.shopify.com/en/api/getting-started/webhooks).
+This package provides ability to grab the shop's domain, the request HMAC, and POST body of a webhook request. Then, it will reproduce the HMAC locally with the POST body and the app's secret key to see if the data matches. Essentially (in pseudo code): `base64(hmac("secret", body)) == req_hmac`.
+
+For more information [see Shopify's article](https://help.shopify.com/en/api/getting-started/webhooks).
 
 ### net/http
 
