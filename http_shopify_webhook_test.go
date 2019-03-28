@@ -83,7 +83,7 @@ func TestNetHttpFailure(t *testing.T) {
 func setupServer(key string, shop string, hmac string, body string) (*httptest.ResponseRecorder, bool) {
 	// Create a mock request to use
 	rec := httptest.NewRecorder()
-	req := httptest.NewRequest("GET", "http://testing", bytes.NewBufferString(body))
+	req := httptest.NewRequest(http.MethodPost, "/webhook/order-create", bytes.NewBufferString(body))
 
 	// Set the headers.
 	req.Header.Set("X-Shopify-Shop-Domain", shop)
