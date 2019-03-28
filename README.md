@@ -57,14 +57,14 @@ func hello(c echo.Context) error {
 func main() {
   secret := "key" // Your secret key for the app.
 
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(hsw.WebhookVerify(secret))
+  e := echo.New()
+  e.Use(middleware.Logger())
+  e.Use(middleware.Recover())
+  e.Use(hsw.WebhookVerify(secret))
 
-	e.POST("/webhook/order-create", handler)
+  e.POST("/webhook/order-create", handler)
 
-	e.Logger.Fatal(e.Start(":1323"))
+  e.Logger.Fatal(e.Start(":1323"))
 }
 ```
 
@@ -82,15 +82,15 @@ import (
 func main() {
   secret := "key" // Your secret key for the app.
 
-	r := gin.Default()
+  r := gin.Default()
   r.Use(hsw.WebhookVerify(secret))
 
-	r.POST("/ping", func(c *gin.Context) {
+  r.POST("/webhook/order-create", func(c *gin.Context) {
     // Handle your webhook here.
     c.Data(http.StatusOK, "text/plain", "Ok")
   })
 
-	r.Run()
+  r.Run()
 }
 ```
 
