@@ -42,16 +42,16 @@ func main() {
 package main
 
 import (
-	"net/http"
+  "net/http"
 
-	"github.com/labstack/echo/v4"
+  "github.com/labstack/echo/v4"
   "github.com/labstack/echo/v4/middleware"
   hsw "github.com/ohmybrew/http_shopify_webhook/wrapper/echo"
 )
 
 // Handler. Handle your webhook here.
 func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Ok")
+  return c.String(http.StatusOK, "Ok")
 }
 
 func main() {
@@ -76,7 +76,7 @@ package main
 import (
   "github.com/gin-gonic/gin"
 
-	hsw "github.com/ohmybrew/http_shopify_webhook/wrapper/gin"
+  hsw "github.com/ohmybrew/http_shopify_webhook/wrapper/gin"
 )
 
 func main() {
