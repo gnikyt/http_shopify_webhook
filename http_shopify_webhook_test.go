@@ -87,7 +87,7 @@ func setupServer(key string, shop string, hmac string, body string) *httptest.Re
 	})
 
 	// Create the handler and serve with our recorder and request.
-	h := WebhookVerify(key)(nh)
+	h := WebhookVerify(key, nh)
 	h.ServeHTTP(rec, req)
 
 	return rec

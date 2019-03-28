@@ -13,34 +13,31 @@ import (
 // Public webhook verify function wrapper.
 // Can be used with any framework tapping into net/http.
 // Simply pass in the secret key for the Shopify app.
-// Example: `WebhookVerify("abc123")(anotherHandler)`.
-func WebhookVerify(key string) func(h http.Handler) http.Handler {
-	return func(h http.Handler) http.Handler {
-		return WebhookVerifyHandler(key, h)
+// Example: `WebhookVerify("abc123", anotherHandler)`.
+func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		WebhookVerifyRequest(key, w, r)
+		fn(w, r)
 	}
 }
 
-// Webhook verify handler function.
+// Webhook verify request from HTTP.
 // Returns a usable handler.
 // Pass in the secret key for the Shopify app and the next handler.`
-func WebhookVerifyHandler(key string, h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// HMAC from request headers and the shop.
-		shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
-		shop := r.Header.Get("X-Shopify-Shop-Domain")
+func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) {
+	// HMAC from request headers and the shop.
+	shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
+	shop := r.Header.Get("X-Shopify-Shop-Domain")
 
-		// Use TeeReader as it won't destroy the original body.
-		var buffer bytes.Buffer
-		tr := io.TeeReader(r.Body, &buffer)
-		bb, _ := ioutil.ReadAll(tr)
+	// Use TeeReader as it won't destroy the original body.
+	var buffer bytes.Buffer
+	tr := io.TeeReader(r.Body, &buffer)
+	bb, _ := ioutil.ReadAll(tr)
 
-		// Verify all is ok.
-		if ok := verifyRequest(key, shop, shmac, bb); !ok {
-			http.Error(w, "Invalid webhook signature", http.StatusBadRequest)
-		}
-
-		h.ServeHTTP(w, r)
-	})
+	// Verify all is ok.
+	if ok := verifyRequest(key, shop, shmac, bb); !ok {
+		http.Error(w, "Invalid webhook signature", http.StatusBadRequest)
+	}
 }
 
 // Do the actual work.
