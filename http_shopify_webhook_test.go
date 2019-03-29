@@ -11,7 +11,7 @@ import (
 // Test base verification function works.
 func TestVerifyRequest(t *testing.T) {
 	// Setup a simple body with a matching HMAC.
-	body := []byte("{\"key\":\"value\"}")
+	body := []byte(`{"key":"value"}`)
 	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
 	shop := "example.myshopify.com"
 
@@ -22,7 +22,7 @@ func TestVerifyRequest(t *testing.T) {
 
 func TestVerifyRequestError(t *testing.T) {
 	// Setup a simple body with a matching HMAC, but missing shop.
-	body := []byte("{\"key\":\"value\"}")
+	body := []byte(`{"key":"value"}`)
 	hmac := "ee2012a00f1649bc35f4cfe1fa582b2ebda5cbf2ef82713d6dc2ec93d81f96fb"
 	shop := ""
 
@@ -43,7 +43,7 @@ func TestVerifyRequestError(t *testing.T) {
 func TestNetHttpSuccess(t *testing.T) {
 	// Set our data.
 	key := "secret"
-	body := "{\"key\":\"value\"}"
+	body := `{"key":"value"}`
 	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
 	shop := "example.myshopify.com"
 
@@ -63,7 +63,7 @@ func TestNetHttpSuccess(t *testing.T) {
 func TestNetHttpFailure(t *testing.T) {
 	// Set our data.
 	key := "secret"
-	body := "{\"key\":\"value\"}"
+	body := `{"key":"value"}`
 	hmac := "ee2012a00f1649bc35f"
 	shop := "example.myshopify.com"
 
