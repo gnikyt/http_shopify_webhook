@@ -5,7 +5,6 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -32,10 +31,10 @@ func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) (o
 	shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
 	shop := r.Header.Get("X-Shopify-Shop-Domain")
 
-	// Use TeeReader as it won't destroy the original body.
-	var buffer bytes.Buffer
-	tr := io.TeeReader(r.Body, &buffer)
-	bb, _ := ioutil.ReadAll(tr)
+	// Read the body and put it back.
+	bb, _ := ioutil.ReadAll(r.Body)
+	r.Body.Close()
+	r.Body = ioutil.NopCloser(bytes.NewBuffer(bb))
 
 	// Verify all is ok.
 	ok = verifyRequest(key, shop, shmac, bb)
