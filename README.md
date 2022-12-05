@@ -1,6 +1,6 @@
 # http_shopify_webhook
 
-[![Build Status](https://secure.travis-ci.org/gnikyt/http_shopify_webhook.png?branch=master)](http://travis-ci.org/gnikyt/http_shopify_webhook)
+![Tests](https://github.com/gnikyt/http_shopify_webhook/workflows/CI/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/gnikyt/http_shopify_webhook/badge.svg?branch=master)](https://coveralls.io/github/gnikyt/http_shopify_webhook?branch=master)
 
 A middleware for validating incoming Shopify webhooks.
