@@ -1,7 +1,7 @@
 # http_shopify_webhook
 
-[![Build Status](https://secure.travis-ci.org/ohmybrew/http_shopify_webhook.png?branch=master)](http://travis-ci.org/ohmybrew/http_shopify_webhook)
-[![Coverage Status](https://coveralls.io/repos/github/ohmybrew/http_shopify_webhook/badge.svg?branch=master)](https://coveralls.io/github/ohmybrew/http_shopify_webhook?branch=master)
+[![Build Status](https://secure.travis-ci.org/gnikyt/http_shopify_webhook.png?branch=master)](http://travis-ci.org/gnikyt/http_shopify_webhook)
+[![Coverage Status](https://coveralls.io/repos/github/gnikyt/http_shopify_webhook/badge.svg?branch=master)](https://coveralls.io/github/gnikyt/http_shopify_webhook?branch=master)
 
 A middleware for validating incoming Shopify webhooks.
 
@@ -23,7 +23,7 @@ import (
   "log"
   "net/http"
 
-  hsw "github.com/ohmybrew/http_shopify_webhook"
+  hsw "github.com/gnikyt/http_shopify_webhook"
 )
 
 // Handler. Handle your webhook here.
@@ -48,7 +48,7 @@ import (
 
   "github.com/labstack/echo/v4"
   "github.com/labstack/echo/v4/middleware"
-  hsw "github.com/ohmybrew/http_shopify_webhook/wrapper/echo"
+  hsw "github.com/gnikyt/http_shopify_webhook/wrapper/echo"
 )
 
 // Handler. Handle your webhook here.
@@ -78,7 +78,7 @@ package main
 import (
   "github.com/gin-gonic/gin"
 
-  hsw "github.com/ohmybrew/http_shopify_webhook/wrapper/gin"
+  hsw "github.com/gnikyt/http_shopify_webhook/wrapper/gin"
 )
 
 func main() {
@@ -102,8 +102,8 @@ func main() {
 
 ## Documentation
 
-Available through [godoc.org](https://godoc.org/github.com/ohmybrew/http_shopify_webhook).
+Available through [godoc.org](https://godoc.org/github.com/gnikyt/http_shopify_webhook).
 
 ## LICENSE
 
-This project is released under the MIT [license](https://github.com/ohmybrew/http_shopify_webhook/blob/master/LICENSE).
+This project is released under the MIT [license](https://github.com/gnikyt/http_shopify_webhook/blob/master/LICENSE).

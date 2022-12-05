@@ -3,8 +3,8 @@ package echo
 import (
 	"net/http"
 
+	"github.com/gnikyt/http_shopify_webhook"
 	"github.com/labstack/echo"
-	"github.com/ohmybrew/http_shopify_webhook"
 )
 
 // Compatible wrapper for Echo framework.

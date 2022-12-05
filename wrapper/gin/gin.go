@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ohmybrew/http_shopify_webhook"
+	"github.com/gnikyt/http_shopify_webhook"
 )
 
 // Compatible wrapper for Gin framework.
