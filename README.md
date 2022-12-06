@@ -102,7 +102,22 @@ func main() {
 
 ## Documentation
 
-Available through [godoc.org](https://godoc.org/github.com/gnikyt/http_shopify_webhook).
+    // go doc -all
+    package http_shopify_webhook // import "github.com/gnikyt/http_shopify_webhook"
+
+
+    FUNCTIONS
+
+    func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc
+        Public webhook verify function wrapper. Can be used with any framework
+        tapping into net/http. Simply pass in the secret key for the Shopify app.
+        Example: `WebhookVerify("abc123", anotherHandler)`.
+
+    func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) (ok bool)
+        Webhook verify request from HTTP. Returns a usable handler. Pass in the
+        secret key for the Shopify app and the next handler.`
+
+Also available through [godoc.org](https://godoc.org/github.com/gnikyt/http_shopify_webhook).
 
 ## LICENSE
 
