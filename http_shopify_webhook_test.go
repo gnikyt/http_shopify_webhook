@@ -13,9 +13,10 @@ func TestVerifyRequest(t *testing.T) {
 	// Setup a simple body with a matching HMAC.
 	body := []byte(`{"key":"value"}`)
 	hmac := "7iASoA8WSbw19M/h+lgrLr2ly/LvgnE9bcLsk9gflvs="
-	shop := "example.myshopify.com"
 
-	if ok := verifyRequest("secret", shop, hmac, body); !ok {
+	// Create a signature
+	lhmac := newSignature("secret", body)
+	if ok := isValidSignature(lhmac, hmac); !ok {
 		t.Errorf("expected request data to verify")
 	}
 }
@@ -24,17 +25,19 @@ func TestVerifyRequestError(t *testing.T) {
 	// Setup a simple body with a matching HMAC, but missing shop.
 	body := []byte(`{"key":"value"}`)
 	hmac := "ee2012a00f1649bc35f4cfe1fa582b2ebda5cbf2ef82713d6dc2ec93d81f96fb"
-	shop := ""
 
-	if ok := verifyRequest("secret", shop, hmac, body); ok {
+	// Create a signature
+	lhmac := newSignature("secret", body)
+	if ok := isValidSignature(lhmac, hmac); ok {
 		t.Errorf("expected request data to not verify, but it did")
 	}
 
-	// Now add the shop, but make the HMAC not match.
-	shop = "example.myshopify.com"
+	// HMAC which does not match body content.
 	hmac = "7iASoA8WSbw19M/h+"
 
-	if ok := verifyRequest("secret", shop, hmac, body); ok {
+	// Create a signature
+	lhmac = newSignature("secret", body)
+	if ok := isValidSignature(lhmac, hmac); ok {
 		t.Errorf("expected request data to not verify, but it did")
 	}
 }
@@ -49,7 +52,6 @@ func TestNetHttpSuccess(t *testing.T) {
 
 	// Setup the server with our data.
 	rec, ran := setupServer(key, shop, hmac, body)
-
 	if c := rec.Code; c != http.StatusOK {
 		t.Errorf("expected status code %v got %v", http.StatusOK, c)
 	}
@@ -69,7 +71,6 @@ func TestNetHttpFailure(t *testing.T) {
 
 	// Setup the server with our data.
 	rec, ran := setupServer(key, shop, hmac, body)
-
 	if c := rec.Code; c != http.StatusBadRequest {
 		t.Errorf("expected status code %v got %v", http.StatusBadRequest, c)
 	}
@@ -99,6 +100,5 @@ func setupServer(key string, shop string, hmac string, body string) (*httptest.R
 	// Create the handler and serve with our recorder and request.
 	h := WebhookVerify(key, nh)
 	h.ServeHTTP(rec, req)
-
 	return rec, ran
 }

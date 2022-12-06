@@ -109,11 +109,11 @@ func main() {
     FUNCTIONS
 
     func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc
-        Public webhook verify function wrapper. Can be used with any framework
-        tapping into net/http. Simply pass in the secret key for the Shopify app.
-        Example: `WebhookVerify("abc123", anotherHandler)`.
+        Public webhook verify wrapper. Can be used with any framework tapping into
+        net/http. Simply pass in the secret key for the Shopify app. Example:
+        `WebhookVerify("abc123", anotherHandler)`.
 
-    func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) (ok bool)
+    func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) bool
         Webhook verify request from HTTP. Returns a usable handler. Pass in the
         secret key for the Shopify app and the next handler.`
 
