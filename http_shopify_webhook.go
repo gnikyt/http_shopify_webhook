@@ -9,6 +9,19 @@ import (
 	"net/http"
 )
 
+// HTTP errors.
+const (
+	errMissingSignature = "Missing signature from request"
+	errMissingShop      = "Missing shop from request"
+	errSignature        = "Invalid webhook signature"
+)
+
+// HTTP headers.
+const (
+	headerHmac = "X-Shopify-Hmac-Sha256"
+	headerShop = "X-Shopify-Shop-Domain"
+)
+
 // Public webhook verify wrapper.
 // Can be used with any framework tapping into net/http.
 // Simply pass in the secret key for the Shopify app.
@@ -27,18 +40,18 @@ func WebhookVerify(key string, fn http.HandlerFunc) http.HandlerFunc {
 // Pass in the secret key for the Shopify app and the next handler.`
 func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) bool {
 	// HMAC from request headers and the shop.
-	shmac := r.Header.Get("X-Shopify-Hmac-Sha256")
-	shop := r.Header.Get("X-Shopify-Shop-Domain")
+	shmac := r.Header.Get(headerHmac)
+	shop := r.Header.Get(headerShop)
 
 	if shop == "" {
 		// No shop provided.
-		http.Error(w, "Missing shop domain", http.StatusBadRequest)
+		httpError(errMissingShop, http.StatusBadRequest, w)
 		return false
 	}
 
 	if shmac == "" {
 		// No HMAC provided.
-		http.Error(w, "Missing signature", http.StatusBadRequest)
+		httpError(errMissingSignature, http.StatusBadRequest, w)
 		return false
 	}
 
@@ -52,7 +65,7 @@ func WebhookVerifyRequest(key string, w http.ResponseWriter, r *http.Request) bo
 
 	// Verify all is ok.
 	if ok := isValidSignature(lhmac, shmac); !ok {
-		http.Error(w, "Invalid webhook signature", http.StatusBadRequest)
+		httpError(errSignature, http.StatusBadRequest, w)
 		return false
 	}
 	return true
@@ -70,4 +83,9 @@ func newSignature(key string, bb []byte) string {
 // Returns bool of comparison result.
 func isValidSignature(lhmac string, shmac string) bool {
 	return lhmac == shmac
+}
+
+// Common place to issue an error to the response writer.
+func httpError(msg string, code int, w http.ResponseWriter) {
+	http.Error(w, msg, code)
 }
